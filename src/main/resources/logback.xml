@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--suppress ALL -->
+<configuration>
+
+    <!--変数の定義を行います。2行目は外部のプロパティファイルの内容から定義します。-->
+    <property name="LOG_DIR" value="c:/logback_logs" />
+
+    <!-- 標準出力に出力する設定です。-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!--アペンダでのレベル設定-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>TRACE</level>
+        </filter>
+        <target>System.out</target>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{80} - %msg%n</pattern>
+        </encoder>
+        <withJasi>true</withJasi>
+    </appender>
+
+    <!--ログファイルを出力するシンプルな設定です。-->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <!--アペンダでのレベル設定-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>TRACE</level>
+        </filter>
+        <!--<file>${LOG_DIR}/Trace.log</file>-->
+        <file>log/Trace.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{80} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--ログファイルをアーカイブする設定です。アーカイブは1時間毎に行います。-->
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--アペンダでのレベル設定-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <!--<file>${LOG_DIR}/Rolling.log</file>-->
+        <file>log/Rolling.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--<fileNamePattern>${LOG_DIR}/Rolling_%d{yyyy-MM-dd_HH}.log</fileNamePattern>-->
+            <fileNamePattern>log/Rolling_%d{yyyy-MM-dd_HH}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{80} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ルートから全てのログをアペンダに流し、アペンダでフィルタリングを行う方式とします。-->
+    <root level="TRACE">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ROLLING"/>
+    </root>
+</configuration>
